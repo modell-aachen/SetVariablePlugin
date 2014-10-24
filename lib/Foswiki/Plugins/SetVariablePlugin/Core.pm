@@ -290,7 +290,18 @@ sub handleBeforeSave {
   writeDebug("handleBeforeSave($web.$topic)");
 
   # get the rules NOW
-  my $viewTemplate = Foswiki::Func::getPreferencesValue('VIEW_TEMPLATE');
+  my $viewTemplate = $meta->getPreference('VIEW_TEMPLATE'); 
+  if (!$viewTemplate) { 
+    # try to use template topic 
+    my $q = $Foswiki::Plugins::SESSION->{request}; 
+    my ($tweb, $ttopic) = (undef, $q->param('templatetopic')); 
+    if ($ttopic) { 
+      ($tweb, $ttopic) = Foswiki::Func::normalizeWebTopicName(undef, $q->param('templatetopic')); 
+      my ($tmeta) = Foswiki::Func::readTopic($tweb, $ttopic); 
+      $viewTemplate = $tmeta->getPreference('VIEW_TEMPLATE'); 
+    } 
+  } 
+  $viewTemplate = Foswiki::Func::getPreferencesValue('VIEW_TEMPLATE') unless $viewTemplate; 
   my $tmpl;
 
   $tmpl = $this->readTemplate($viewTemplate) if $viewTemplate;

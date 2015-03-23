@@ -396,10 +396,7 @@ sub expandVariables {
     my $val = $params{$key} || '';
     $theFormat =~ s/\$$key\b/$val/g;
   }
-  $theFormat =~ s/\$percnt/\%/go;
-  $theFormat =~ s/\$dollar/\$/go;
-  $theFormat =~ s/\$nop//go;
-  $theFormat =~ s/\$n([^$mixedAlphaNum]|$)/\n$1/go;
+  $theFormat = Foswiki::Func::decodeFormatTokens($theFormat);
 
   return $theFormat;
 }

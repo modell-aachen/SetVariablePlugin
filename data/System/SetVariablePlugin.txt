@@ -42,6 +42,7 @@ wins and decides wether a variable is set or deleted. This allows to create more
   value="<value>" 
   field="<fieldname>" 
   regex="<pattern>"
+  condition="<TML|1|0>"
 }%</verbatim>
 
 This sets topic variable =key= to value =value= if the formfield =fieldname= of the current topic
@@ -54,6 +55,7 @@ to create access control settings automatically.
   "<key>" 
   field="<fieldname>" 
   regex="<pattern>"
+  condition="<Perl true>|off|false|no|0"
 }%</verbatim>
 
 This unsets topic variable =key= when formfield formfield =fieldname= of the current topic

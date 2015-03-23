@@ -88,6 +88,15 @@ sub applyRules {
       }
     }
 
+    # check condition parameter
+    if ($record->{condition}) {
+        my $condition = expandVariables($record->{condition});
+        if (defined $condition) {
+            $condition = Foswiki::Func::expandCommonVariables($condition, $topic, $web);
+        }
+        next unless Foswiki::Func::isTrue($condition);
+    }
+
     # get settings 
     my $var = $record->{var};
     my $type = $record->{type} || 'Local';
@@ -120,6 +129,7 @@ sub handleSetVar {
     type => ($params->{type} || 'Local'),
     field => $params->{field},
     regex => ($params->{match} || $params->{matches} || $params->{regex} || '.*'),
+    condition => $params->{condition},
     prio => 1,
   );
 
@@ -244,6 +254,7 @@ sub handleUnsetVar {
     var => ($params->{_DEFAULT} || $params->{var}),
     field => $params->{field},
     regex => ($params->{match} || $params->{matches} || $params->{regex} || '.*'),
+    condition => $params->{condition},
     prio => 1,
   );
 

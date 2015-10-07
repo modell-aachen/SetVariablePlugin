@@ -75,7 +75,6 @@ sub getCore {
 
 ###############################################################################
 sub beforeSaveHandler { 
-  return if $Foswiki::Plugins::VERSION >= 2.3;
   return getCore()->handleBeforeSave(@_); 
 }
 

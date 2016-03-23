@@ -70,18 +70,18 @@ sub applyRules {
   foreach my $record (sort {$b->{prio} <=> $a->{prio}} @{$this->{rules}}) {
 
     # check conditions
+    my $found;
     if ($record->{field}) {
       next unless defined $record->{regex}; # illegal rule
-      my $found = 0;
       foreach my $field (@fields) {
         my $name = $field->{name} || '';
         my $value = $field->{value} || '';
         if ($name eq $record->{field} && $value =~ /^($record->{regex})$/) {
-          $found = 1;
+          $found = $field;
           last;
         }
       }
-      next unless $found;
+      next unless defined $found;
     } else {
       if ($record->{regex}) { # check against topic text
         next unless $text =~ /$record->{regex}/;
@@ -100,7 +100,8 @@ sub applyRules {
     # get settings 
     my $var = $record->{var};
     my $type = $record->{type} || 'Local';
-    my $value = expandVariables($record->{value});
+    $found = {} unless defined $found;
+    my $value = expandVariables($record->{value}, %$found);
     if (defined $value) {
       $value = Foswiki::Func::expandCommonVariables($value, $topic, $web);
     }
